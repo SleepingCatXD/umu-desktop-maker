@@ -92,7 +92,6 @@ bool MainWindow::validatePaths() const
 
     // 检查图标路径：如果提供了且不是有效文件，则可能是系统图标名称，仅当看起来不像合法文件名时警告
     if (!iconPath.isEmpty() && !QFileInfo::exists(iconPath)) {
-        // [优化] 使用静态 QRegularExpression 避免临时对象
         static const QRegularExpression iconNameRegex(QStringLiteral("^[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)*$"));
         if (!iconPath.contains(iconNameRegex)) {
             QMessageBox::warning(const_cast<MainWindow*>(this), QStringLiteral("图标路径警告"),
@@ -182,7 +181,8 @@ bool MainWindow::writeDesktopFile(const QString &content, const QString &filePat
     file.close();
 
     // 设置可执行权限
-    file.setPermissions(file.permissions() | QFile::ExeOwner | QFile::ExeGroup | QFile::ExeOther);
+    // 非必要
+    // file.setPermissions(file.permissions() | QFile::ExeOwner | QFile::ExeGroup | QFile::ExeOther);
     return true;
 }
 
